@@ -1,0 +1,22 @@
+
+%header
+  新建活动
+  %div(class="header-left  button_position" ng-show='show')
+    %a(ng-tap="list()"  class="btn-style btn-4" )返回
+
+%div(id="wrapper" class="wrapper scrollable" )
+  %form(class="wrapper-inner" )
+    %fieldset(class="form-wrapper" )
+      %h4活动名称
+      %input(ng-model="name"   type="text"   class="input-full" ng-change="change()" )
+      %br
+      %br
+
+
+      %a(ng-tap="activename()"  class="btn btn-primary" ng-disabled="gray" style="width:100%" )
+        %h4创建
+      %br
+      %div(ng-show='content' style="background-color:lightblue;text-align:center"  )
+        %h4您输入的内容重复！
+
+
