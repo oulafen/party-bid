@@ -6,8 +6,20 @@ myModule.config(function($routeProvider) {
             templateUrl: "pages/activity_list_page.html",
             controller:ActivityListController
         }).when("/sign_ups", {
-            templateUrl: "pages/apply_page.html",
+            templateUrl: "pages/sign_up_page.html",
             controller: SignUpListController
+        }).when("/bid/list", {
+            templateUrl: "pages/bid_activity_list_page.html",
+            controller: BidListController
+        }).when("/bid/apply", {
+            templateUrl: "pages/bid_activity_apply_page.html",
+            controller: BidApplyController
+        }).when("/bid/result", {
+            templateUrl: "pages/bid_result_page.html",
+            controller: BidResultController
+        }).when("/bid/price/statistics", {
+            templateUrl: "pages/bid_price_statistics_page.html",
+            controller: BidPriceStatisticsController
         }).otherwise({
             redirectTo: "/"
         });

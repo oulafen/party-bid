@@ -1,0 +1,22 @@
+%header
+  竞价
+  %div.header-left.button_position
+    %a.btn-style.btn-4(ng-tap="go_activity_list()") 返回
+  %div.header-right.button_position(ng-switch='status')
+    %button.btn.btn-primary( ng-disabled='true' ng-switch-when='begin_disabled' ) 开始
+    %button.btn-style.btn-4(ng-tap="bid_unbegin()" ng-switch-when='unbegin') 开始
+%div(class="wrapper" style="overflow: hidden;" )
+  %ul(class="list-style-2")
+    %li.text-vertical-align(ng-repeat="biding in bidings " style="background:{{biding.bid_status}}"
+     ng-tap='go_bid_apply(biding.bid_name)')
+      %div.float-left.font-size-18px
+        %a
+          {{biding.bid_name}}
+%footer
+  %ul.footer-nav.footer-nav-2tabs.height-50px
+    %li
+      %a.height-50px(ng-tap="go_sign_ups()")
+        %h4 报名
+    %li.active
+      %a.height-50px
+        %h4 竞价

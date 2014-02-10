@@ -1,23 +1,15 @@
-function ActivityListController($scope,$navigate){
-    $scope.page = function(){
-      $navigate.go('/activity/create','slide','left');
+function ActivityListController($scope, $navigate) {
+    $scope.set_create_button_status = function () {
+        $scope.present_activity = Activity.get_present_activity();
+        $scope.button_status = $scope.present_activity.active_status == 'yellow' ?  'disable' : 'able';
     }
-
-
-    $scope.order=function() {
-        var activename=JSON.parse(localStorage.getItem('activities'));
-        $scope.names=activename.reverse()
-
+    $scope.go_create = function () {
+        $navigate.go('/activity/create', 'slide', 'left');
     }
-    $scope.order()
-
-
-    $scope.delete_activity=function(index){
-
-        var activity=JSON.parse(localStorage.getItem('activities'));
-        activity.splice(activity.length-1-index,1);
-        localStorage.setItem('activities',JSON.stringify(activity));
-        $scope.order();
+    $scope.go_apply = function (activity_name) {
+        Activity.save_click_activity_name(activity_name)
+        $navigate.go('/sign_ups', 'slide', 'left');
     }
-
+    $scope.set_create_button_status();
+    $scope.activities = Activity.get_activities();
 }

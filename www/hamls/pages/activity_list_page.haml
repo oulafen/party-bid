@@ -1,22 +1,15 @@
 %header
   活动列表
-  %div(class="header-right button_position"  )
-    %a(ng-tap="page()"  class="btn-style btn-4" ) 创建活动
-%div(class="wrapper" style="overflow: hidden;" )
-  %ul(class="list-style-2")
-    %li(ng-repeat="name in names" style=" height:40px;line-height:40px")
-      %div(style="float:left;font-size:18px" )
+  %div.header-right.button_position(ng-switch='button_status' )
+    %button.btn.btn-primary( ng-tap='go_create()' ng-switch-when='able') 创建活动
+    %button.btn.btn-primary(ng-disabled='true' ng-switch-when='disable') 创建活动
+%div.wrapper.overflow-hidden
+  %ul.list-style-2
+    %li.text-vertical-align(ng-repeat="activity in activities" style="background:{{activity.active_status}}"
+    ng-tap="go_apply(activity.active_name)" )
+      %div.float-left.font-size-18px
         %a
-          {{name}}
-
-
-
-
-
-
-
-
-
+          {{activity.active_name}}
 
 
 

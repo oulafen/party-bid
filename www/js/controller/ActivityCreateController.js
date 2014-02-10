@@ -1,52 +1,32 @@
-function ActivityCreateController($scope,$navigate){
-    $scope.name='';
-    $scope.list = function(){
+function ActivityCreateController($scope, $navigate) {
+    $scope.input_name = '';
+    $scope.back_button_status = function () {
+        $scope.activities = Activity.get_activities();
+        $scope.show = $scope.activities.length != 0;
+    }
+    $scope.go_activity_list_page = function () {
         $navigate.go('/activity/list');
     }
-
-    $scope.show_button=function(){
-        if(!JSON.parse(localStorage.getItem('activities'))){
-            $scope.show=false;
-            return ;
-        }
-        if(JSON.parse(localStorage.getItem('activities')).length==0){
-            $scope.show=false;
-            return;
-        }
-        $scope.show=true;
-    }
-    $scope.show_button()
-
-
-    $scope.activename=function(){
-        if (!$scope.gray){
-            var activities=JSON.parse(localStorage.getItem('activities')) || [];
-            for(var i= 0,j=activities.length;i<j;i++)
-            {
-                if($scope.name==activities[i]){
-                    $scope.content=true;
-                    break;
-                }
-
-            }
-            if(i==j){
-                activities.push($scope.name)
-                localStorage.setItem('activities',JSON.stringify(activities));
-                $navigate.go('/sign_ups','slide','left');
-            }
+    $scope.set_active_name = function () {
+        $scope.activity = new Activity('', null, [], []);
+        if (!$scope.button_be_gray && Activity.judge_activity_name_is_repeat($scope.input_name)) {
+            $scope.name_repeat = true;
+        } else {
+            $scope.activity.active_name = $scope.input_name;
+            $scope.activities.unshift($scope.activity);
+            Activity.save_activities($scope.activities);
+            Activity.save_present_activity_name($scope.input_name);
+            Activity.save_click_activity_name($scope.input_name);
+            $navigate.go('/sign_ups', 'slide', 'left');
         }
     }
-
-    $scope.button_status=function(){
-        $scope.name.length==0?$scope.gray=true:$scope.gray=false;
+    $scope.create_button_status = function () {
+        $scope.button_be_gray = $scope.input_name.length == 0;
     }
-
-    $scope.change=function(){
-        $scope.button_status();
+    $scope.create_button_status_change = function () {
+        $scope.create_button_status();
     }
-
-    $scope.button_status();
-
-
-
+    $scope.back_button_status();
+    $scope.create_button_status();
+    SignUp.save_sign_up_status('unbegin');
 }

@@ -1,50 +1,59 @@
+function SignUpListController($scope, $navigate) {
 
-
-
-
-function SignUpListController($scope,$navigate){
-    $scope.go_list = function(){
-        $navigate.go('/activity/list','slide','right')
+    $scope.status_map = {
+        'null': function () {
+            return 'unbegin'
+        },
+        'yellow': function () {
+            return 'beginning'
+        },
+        'lightgray': function () {
+            return 'end'
+        }
     }
-
-    $scope.send_sms=function (phone, message) {
-        native_access.send_sms(
-            {"receivers": [{"name": 'name', "phone": phone}]}
+    $scope.button_status_init=function() {
+        $scope.click_activity = Activity.get_click_activity();
+        $scope.present_activity = Activity.get_present_activity();
+        $scope.sign_up_status = SignUp.get_sign_up_status();
+        if ($scope.present_activity.active_status == 'yellow'
+            && $scope.click_activity.active_name != $scope.present_activity.active_name) {
+            $scope.status = 'begin_disabled';
+            return;
+        }
+        if ($scope.present_activity.active_status == 'yellow' && $scope.sign_up_status == 'end') {
+            $scope.status = 'end';
+            return;
+        }
+        $scope.click_activity.active_name == $scope.present_activity.active_name ?
+            $scope.status = $scope.status_map[$scope.present_activity.active_status]()
+            : $scope.status = $scope.status_map[$scope.click_activity.active_status]();
     }
-
-    $scope.native_accessor=function(json_message) {
-        judge_and_process_received_apply_message(json_message);
+    $scope.sign_up_unbegin = function () {
+        $scope.status = 'beginning';
+        $scope.present_activity = $scope.click_activity;
+        $scope.present_activity.active_status = 'yellow';
+        Activity.save_present_activity_name($scope.present_activity.active_name)
+        SignUp.update_sign_up_activities($scope.present_activity)
+        SignUp.save_sign_up_status('beginning');
     }
-
-
-    temp_message = json_message.messages[0].message;
-
-    notify_message_received({"messages":[{"create_date":"Tue Jan 15 15:28:44 格林尼治标准时间+0800 2013","message":"bm1","phone":"181717833"}]})
-
-
-
-    $scope.native_accessor = function(){
-        var process_received_message=function (json_message) {
-                judge_and_process_received_apply_message(json_message);
-            }
-
-        var send_sms=function (phone, message) {
-                native_access.send_sms(
-                    {"receivers": [{"name": 'name', "phone": phone}]},
-                    {"message_content": message}
-                );
-            }
-
-        var receive_message=function (json_message) {
-                if (typeof this.process_received_message === 'function') {
-                    this.process_received_message(json_message);
-                }
-            }
+    $scope.sign_up_beginning = function () {
+        if (confirm('确认要结束本次报名吗？')) {
+                SignUp.save_sign_up_status('end');
+                $scope.status = 'end';
+                $navigate.go('/bid/list');
+        }
     }
-
+    $scope.peoples=function(){
+        $scope.present_activity = Activity.get_present_activity();
+        $scope.peoples = $scope.present_activity.apply_people;
+    }
+    $scope.go_list = function () {
+        $navigate.go('/activity/list', 'slide', 'right');
+    }
+    $scope.go_bid_list = function(){
+        $navigate.go('/bid/list');
+    }
+    $scope.button_status_init();
+    $scope.peoples();
 }
-
-
-
-
 
